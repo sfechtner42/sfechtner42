@@ -46,25 +46,29 @@ class FileProcessor:
                   RRoot,1.3.2030,Created function
                   Sabrina Fechtner, 11.16.2023, Incorporated Function
 
-                  :return: None
+                  :return: Student Data
                   """
         try:
-            open(FILE_NAME, "r")
-            student_data = json.load(file_name)
+            file = open(FILE_NAME, "r")
+            student_data = json.load(file)
+            file.close()
             print("Data successfully loaded from the file.")
         except FileNotFoundError as e:
             print(f"File not found, creating it...")
             open(FILE_NAME, "w")
-            json.dump(student_data, file_name)
+            json.dump(student_data, file)
+            file.close()
         except json.JSONDecodeError as e:
             print(f"Invalid JSON file: {e}. Resetting it...")
             open(FILE_NAME, "w")
-            json.dump(student_data, file_name)
+            json.dump(student_data, file)
+            file.close()
         except Exception as e:
             print(f"An unexpected error occurred while loading data: {e}")
         finally:
-            if file and not file.closed:
+            if file.closed == False:
                 file.close()
+        return student_data
     @staticmethod
     def write_data_to_file(file_name: str, student_data: list):
         """ This function writes student and course data to JSON file
@@ -145,6 +149,7 @@ class IO:
             output_error_messages(error,)
         return choice
 
+    @staticmethod
     def input_student_data(student_data: list):
         while True:
             try:
@@ -167,7 +172,7 @@ class IO:
                             "course": course_name}
             students.append(student_data)
             print(f"You have registered {student_first_name} {student_last_name} for {course_name}.")
-
+    @staticmethod
     def output_student_courses(student_data: list):
             """ This function gets the first name, last name, and GPA from the user
 
@@ -177,13 +182,14 @@ class IO:
 
         :return: None
         """
-    for students in student_data:
-        print("The current data is: \n")
-        print(students)
+            for students in student_data:
+                print("The current data is: \n")
+                print(students)
 
 
 #Main program:
-students = FileProcessor.read_data_from_file(file_name=FILE_NAME, student_data=students)
+
+FileProcessor.read_data_from_file(file_name=FILE_NAME, student_data=students)
 
 while (True):
     IO.output_menu(menu=MENU)

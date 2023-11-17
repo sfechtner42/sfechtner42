@@ -4,7 +4,8 @@
 # with structured error handling
 # Change Log: (Who, When, What)
 #   RRoot,1/1/2030,Created Script
-#   Sabrina Fechtner ,11/15/2023, Define Classes
+#   Sabrina Fechtner,11/15/2023, Define Classes
+#   Sabrina Fechtner, 11/16/2023, Writing Functions
 # ------------------------------------------------------------------------------------------ #
 import json
 
@@ -86,6 +87,7 @@ class IO:
     RRoot,1.2.2030,Added menu output and input functions
     RRoot,1.3.2030,Added a function to display the data
     RRoot,1.4.2030,Added a function to display custom error messages
+    Sabrina Fechtner, 11.15.2023, Incorporated into AO6 script
     """
 @staticmethod
     def input_student_data(student_data: list):
@@ -110,7 +112,7 @@ class IO:
             students.append(student_data)
             print(f"You have registered {student_first_name} {student_last_name} for {course_name}.")
         except ValueError as e:
-            print(e)  # Prints the custom message
+            print(e) 
             print("-- Technical Error Message -- ")
             print(e.__doc__)
             print(e.__str__())
@@ -122,7 +124,8 @@ class IO:
         continue
 
 while (True):
-
+#Beginning main body of Script
+  
     # Present the menu of choices
     print(MENU)
     menu_choice = input("What would you like to do?: ")

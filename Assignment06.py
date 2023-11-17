@@ -4,10 +4,10 @@
 # with structured error handling
 # Change Log: (Who, When, What)
 #   RRoot,1/1/2030,Created Script
-#   Sabrina Fechtner,11/15/2023, Define Classes
-#   Sabrina Fechtner, 11/16/2023, Writing Functions
+#   Sabrina Fechtner ,11/15/2023, Define Classes
 # ------------------------------------------------------------------------------------------ #
 import json
+import io
 
 # Define the Data Constants
 MENU: str = '''
@@ -22,17 +22,11 @@ MENU: str = '''
 # Define the Data Constants
 FILE_NAME: str = "Enrollments.json"
 
-# Define the Data Variables and constants
-student_first_name: str = ''
-student_last_name: str = ''
-course_name: str = ''
-student_data: dict = {}
+# Define the Data Variables
 students: list = []
-csv_data: str = ''
-json_data: str = ''
-file = None
 menu_choice: str
 
+#File Processing Functions
 class FileProcessor:
     """
     A collection of processing layer functions that work with Json files
@@ -46,6 +40,14 @@ class FileProcessor:
     # Read from the Json file
     @staticmethod
     def read_data_from_file(file_name: str, student_data: list):
+        """ This function reads previous JSON file with student and course data
+
+                  ChangeLog: (Who, When, What)
+                  RRoot,1.3.2030,Created function
+                  Sabrina Fechtner, 11.16.2023, Incorporated Function
+
+                  :return: None
+                  """
         try:
             open(FILE_NAME, "r")
             student_data = json.load(file_name)
@@ -65,6 +67,14 @@ class FileProcessor:
                 file.close()
     @staticmethod
     def write_data_to_file(file_name: str, student_data: list):
+        """ This function writes student and course data to JSON file
+
+           ChangeLog: (Who, When, What)
+           RRoot,1.3.2030,Created function
+           Sabrina Fechtner, 11.16.2023, Incorporated Function
+
+           :return: None
+           """
         try:
             file = open(file_name, "w")
             json.dump(student_data, file)
@@ -87,121 +97,118 @@ class IO:
     RRoot,1.2.2030,Added menu output and input functions
     RRoot,1.3.2030,Added a function to display the data
     RRoot,1.4.2030,Added a function to display custom error messages
-    Sabrina Fechtner, 11.15.2023, Incorporated into AO6 script
     """
-@staticmethod
-    def input_student_data(student_data: list):
-        """ This function gets the first name, last name, and GPA from the user
+    pass
+
+    @staticmethod
+    def output_error_messages(message: str, error: Exception = None):
+        """ This function displays error messages to the user
 
         ChangeLog: (Who, When, What)
         RRoot,1.3.2030,Created function
+        Sabrina Fechtner, 11.16.2023, Incorporated into A06
 
         :return: None
         """
+        print(message, end="\n\n")
+        if error is not None:
+            print(f"An unexpected error occurred: {e}")
+
+    @staticmethod
+    def output_menu(menu: str):
+        """ This function displays the menu of choices to the user
+
+        ChangeLog: (Who, When, What)
+        RRoot,1.3.2030,Created function
+        Sabrina Fechtner, 11.16.2023, Incorporated into A06
+
+        :return: None
+        """
+        print()
+        print(menu)
+
+    @staticmethod
+    def input_menu_choice(menu: str,):
+        """ This function incorporates user choice from menu
+
+        ChangeLog: (Who, When, What)
+        RRoot,1.3.2030,Created function
+        Sabrina Fechtner, 11.16.2023, Incorporated into A06
+
+        :return: User Choice
+        """
+        choice = "0"
         try:
-            student_first_name = input("Enter the student's first name: ")
-            if not student_first_name.isalpha():
-                raise ValueError("The last name should not contain numbers.")
-            student_last_name = input("Enter the student's last name: ")
-            if not student_last_name.isalpha():
-                raise ValueError("The last name should not contain numbers.")
+            if choice not in ("1", "2", "3", "4"):
+                raise Exception("Please only choose option 1, 2, 3, or 4")
+        except Exception as e:
+            output_error_messages(error,)
+        return choice
+
+    def input_student_data(student_data: list):
+        while True:
+            try:
+                student_first_name = input("Enter the student's first name: ")
+                if not student_first_name.isalpha():
+                    raise ValueError("The first name cannot be alphanumeric. Please re-enter the first name.")
+                break
+            except ValueError as e:
+                print(e)
+        while True:
+            try:
+                student_last_name = input("Enter the student's last name: ")
+                if not student_last_name.isalpha():
+                    raise ValueError("The last name cannot be alphanumeric. Please re-enter the last name.")
+                break
+            except ValueError as e:
+                print(e)
             course_name = input("Please enter the name of the course: ")
-            student_data = {"FirstName": student_first_name,
-                            "LastName": student_last_name,
-                            "CourseName": course_name}
+            student_data = {"student_first_name": student_first_name, "student_last_name": student_last_name,
+                            "course": course_name}
             students.append(student_data)
             print(f"You have registered {student_first_name} {student_last_name} for {course_name}.")
-        except ValueError as e:
-            print(e) 
-            print("-- Technical Error Message -- ")
-            print(e.__doc__)
-            print(e.__str__())
-        except Exception as e:
-            print("Error: There was a problem with your entered data.")
-            print("-- Technical Error Message -- ")
-            print(e.__doc__)
-            print(e.__str__())
-        continue
+
+    def output_student_courses(student_data: list):
+            """ This function gets the first name, last name, and GPA from the user
+
+        ChangeLog: (Who, When, What)
+        RRoot,1.3.2030,Created function
+        Sabrina Fechtner, 11.16.2023, Incorporated into A06
+
+        :return: None
+        """
+    for students in student_data:
+        print("The current data is: \n")
+        print(students)
+
+
+#Main program:
+students = FileProcessor.read_data_from_file(file_name=FILE_NAME, student_data=students)
 
 while (True):
-#Beginning main body of Script
-  
-    # Present the menu of choices
-    print(MENU)
-    menu_choice = input("What would you like to do?: ")
-
+    IO.output_menu(menu=MENU)
+    menu_choice = IO.input_menu_choice()
 
     # Input user data
     if menu_choice == "1":
-
-        try:
-            student_first_name = input("Enter the student's first name: ")
-            if not student_first_name.isalpha():
-                raise ValueError("The last name should not contain numbers.")
-            student_last_name = input("Enter the student's last name: ")
-            if not student_last_name.isalpha():
-                raise ValueError("The last name should not contain numbers.")
-            course_name = input("Please enter the name of the course: ")
-            student_data = {"FirstName": student_first_name,
-                            "LastName": student_last_name,
-                            "CourseName": course_name}
-            students.append(student_data)
-            print(f"You have registered {student_first_name} {student_last_name} for {course_name}.")
-        except ValueError as e:
-            print(e)  # Prints the custom message
-            print("-- Technical Error Message -- ")
-            print(e.__doc__)
-            print(e.__str__())
-        except Exception as e:
-            print("Error: There was a problem with your entered data.")
-            print("-- Technical Error Message -- ")
-            print(e.__doc__)
-            print(e.__str__())
+        IO.input_student_data(student_data=students)
+        IO.output_student_courses(student_data)
         continue
 
     # Present the current data
     elif menu_choice == "2":
-
-        # Process the data to create and display a custom message
-        print("-" * 50)
-        for student in students:
-            print(f'Student {student["FirstName"]} '
-                  f'{student["LastName"]} is enrolled in {student["CourseName"]}')
-        print("-" * 50)
+        IO.output_student_courses(student_data)
         continue
 
     # Save the data to a file
     elif menu_choice == "3":
-
-        try:
-            file = open(FILE_NAME, "w")
-            # CSV answer
-            # for student in students:
-            #     csv_data = f'{student["FirstName"]},{student["LastName"]},{student["CourseName"]}\n'
-            #     file.write(csv_data)
-
-            # # JSON answer
-            json.dump(students, file)
-
-            file.close()
-            print("The following data was saved to file!")
-            for student in students:
-                print(f'Student {student["FirstName"]} '
-                      f'{student["LastName"]} is enrolled in {student["CourseName"]}')
-        except Exception as e:
-            if file.closed == False:
-                file.close()
-            print("Error: There was a problem with writing to the file.")
-            print("Please check that the file is not open by another program.")
-            print("-- Technical Error Message -- ")
-            print(e.__doc__)
-            print(e.__str__())
+        FileProcessor.write_data_to_file(file_name=FILE_NAME, student_data=students)
         continue
 
     # Stop the loop
     elif menu_choice == "4":
         break  # out of the loop
     else:
-        print("Please only choose option 1, 2, or 3")
+        print("Please only choose option 1, 2, 3, or 4")
 
 print("Program Ended")

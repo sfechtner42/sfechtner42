@@ -42,9 +42,9 @@ class FileProcessor:
     def read_data_from_file(file_name: str, student_data: list):
         """ This function reads previous JSON file with student and course data
 
-                  ChangeLog: (Who, When, What)
-                  RRoot,1.3.2030,Created function
-                  Sabrina Fechtner, 11.16.2023, Incorporated Function
+            ChangeLog: (Who, When, What)
+            RRoot,1.3.2030,Created function
+            Sabrina Fechtner, 11.16.2023, Incorporated Function
 
                   :return: Student Data
                   """
@@ -116,7 +116,7 @@ class IO:
         """
         print(message, end="\n\n")
         if error is not None:
-            print(f"An unexpected error occurred: {e}")
+            print(f"An unexpected error occurred: {error}")
 
     @staticmethod
     def output_menu(menu: str):
@@ -132,7 +132,7 @@ class IO:
         print(menu)
 
     @staticmethod
-    def input_menu_choice(menu: str,):
+    def input_menu_choice():
         """ This function incorporates user choice from menu
 
         ChangeLog: (Who, When, What)
@@ -143,10 +143,11 @@ class IO:
         """
         choice = "0"
         try:
-            if choice not in ("1", "2", "3", "4"):
-                raise Exception("Please only choose option 1, 2, 3, or 4")
+            choice = input("What would you like to do?: ")
+            if choice not in ("1","2","3","4"):
+                raise Exception("Only Enter 1, 2, 3, or 4")
         except Exception as e:
-            output_error_messages(error,)
+            IO.output_error_messages(e.__str__())
         return choice
 
     @staticmethod
